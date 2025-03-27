@@ -1,9 +1,9 @@
-"use client"
+"use client";
 
-import { BarChart3, TrendingUp } from "lucide-react"
-import { Bar, BarChart, CartesianGrid, XAxis } from "recharts"
+import { BarChart3, TrendingUp } from "lucide-react";
+import { Bar, BarChart, CartesianGrid, XAxis } from "recharts";
 
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   type ChartConfig,
   ChartContainer,
@@ -11,7 +11,7 @@ import {
   ChartLegendContent,
   ChartTooltip,
   ChartTooltipContent,
-} from "@/components/ui/chart"
+} from "@/components/ui/chart";
 
 const chartData = [
   { month: "January", desktop: 186, mobile: 80 },
@@ -20,7 +20,7 @@ const chartData = [
   { month: "April", desktop: 73, mobile: 190 },
   { month: "May", desktop: 209, mobile: 130 },
   { month: "June", desktop: 214, mobile: 140 },
-]
+];
 
 const chartConfig = {
   desktop: {
@@ -31,21 +31,25 @@ const chartConfig = {
     label: "Mobile",
     color: "hsl(var(--chart-2))",
   },
-} satisfies ChartConfig
+} satisfies ChartConfig;
 
 export function ChartBar() {
-  return (
-    <Card>
-      <CardHeader className="flex flex-row items-top justify-between space-y-0 pb-2">
-        <div>
+  const totalVisitors = chartData.reduce((acc, curr) => acc + curr.desktop + curr.mobile, 0);
 
-          <CardTitle>Bar Chart - Stacked + Legend</CardTitle>
+  return (
+    <Card className="bg-blue-50/70 hover:bg-blue-100/50 transition-colors">
+      <CardHeader className="flex flex-row items-top justify-between space-y-0 pb-2 ">
+        <div>
+          <CardTitle>Total Visitors in last 6 months</CardTitle>
           <CardDescription>January - June 2024</CardDescription>
         </div>
         <BarChart3 className="h-4 w-4 text-muted-foreground" />
-
       </CardHeader>
       <CardContent>
+        <div className="mb-4 text-center">
+          <p className="text-3xl font-bold">{totalVisitors.toLocaleString()}</p>
+          <p className="text-muted-foreground">Total Visitors</p>
+        </div>
         <ChartContainer config={chartConfig}>
           <BarChart accessibilityLayer data={chartData}>
             <CartesianGrid vertical={false} />
@@ -70,6 +74,5 @@ export function ChartBar() {
         <div className="leading-none text-muted-foreground">Showing total visitors for the last 6 months</div>
       </CardFooter>
     </Card>
-  )
+  );
 }
-

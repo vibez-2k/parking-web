@@ -28,7 +28,8 @@ const chartConfig = {
 
 export function ChartLine() {
   return (
-    <Card className="flex flex-col">
+    <Card className="flex flex-col bg-blue-50/70 hover:bg-blue-100/50 transition-colors">
+
       <CardHeader>
         <CardTitle className="flex items-center justify-center gap-2"> 
           <LineChartIcon className="h-4 w-4 text-muted-foreground" />

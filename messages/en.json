@@ -1,18 +1,18 @@
 {
   "meta": {
-    "title": "Parking App",
-    "description": "A simple parking app"
+    "title": "Thoothukudi Police Parking App",
+    "description": "Simplified parking management for Thoothukudi city"
   },
   "siteDetails": {
-    "siteName": "Parking App",
-    "siteUrl": "https://parking-app.vercel.app/",
+    "siteName": "Thoothukudi Police Parking App",
+    "siteUrl": "https://thoothukudi-parking.vercel.app/",
     "language": "en-us",
     "locale": "en-US",
-    "siteLogo": "${process.env.BASE_PATH || ''}/images/logo.png"
+    "siteLogo": "${process.env.BASE_PATH || ''}/images/thoothukudi-police-logo.png"
   },
   "header": {
     "meta": {
-      "title": "Parking App"
+      "title": "Thoothukudi Police Parking App"
     },
     "features": "Features",
     "howItWorks": "How it Works",
@@ -20,18 +20,18 @@
     "download": "Download"
   },
   "heroDetails": {
-    "heading": "The only parking app you'll ever need",
-    "subheading": "Find parking spots near you and reserve them in advance" ,
-    "button1": "Contine On Web",
+    "heading": "Smart Parking Solutions for Thoothukudi",
+    "subheading": "Find and reserve parking spots with ease in Thoothukudi",
+    "button1": "Continue On Web",
     "button2": "GET IT ON",
     "button3": "Google Play"
   },
   "HomePage": {
-    "title": "Hello world!",
-    "about": "Go to the about page"
+    "title": "Welcome to Thoothukudi Parking",
+    "about": "Learn about our parking management system"
   },
   "technologies": {
-    "heading": "Powered by cutting-edge technology",
+    "heading": "Advanced Technology for Urban Parking",
     "text1":"High-Res Cameras",
     "text2":"Artificial Intelligence",
     "text3":"Deep Learning",
@@ -39,91 +39,89 @@
     "text5":"PyTorch",
     "text6":"Hardware Acceleration"
   },
-"benefits": {
-  "items": {
-    "length": 3,
-    "0": {
-      "title": "Smart Parking Management",
-      "description": "Efficiently locate and reserve the nearest available parking slots. Our AI-powered system helps officers save time and reduce congestion.",
-      "imageSrc": "/images/mockup-1.webp",
-      "bullets": {
-        "length": 3,
-        "0": {
-          "title": "Real-Time Slot Availability",
-          "description": "Instantly check and book the nearest parking spaces with live updates.",
-          "icon": "FiMapPin"
-        },
-        "1": {
-          "title": "Automated Slot Reservation",
-          "description": "Reserve a parking slot in advance and navigate seamlessly to the location.",
-          "icon": "FiClock"
-        },
-        "2": {
-          "title": "Optimized Traffic Flow",
-          "description": "Reduce congestion by directing officers to the best available spots.",
-          "icon": "FiTrendingUp"
+  "benefits": {
+    "items": {
+      "length": 3,
+      "0": {
+        "title": "Smart Parking in Thoothukudi",
+        "description": "Efficiently locate and reserve parking slots in Thoothukudi. Our AI-powered system helps reduce urban congestion.",
+        "imageSrc": "/images/mockup-1.webp",
+        "bullets": {
+          "length": 3,
+          "0": {
+            "title": "Real-Time Slot Availability",
+            "description": "Instantly check and book parking spaces in Thoothukudi with live updates.",
+            "icon": "FiMapPin"
+          },
+          "1": {
+            "title": "Automated Slot Reservation",
+            "description": "Reserve a parking slot in advance and navigate seamlessly in the city.",
+            "icon": "FiClock"
+          },
+          "2": {
+            "title": "Optimized Traffic Flow",
+            "description": "Reduce congestion by guiding vehicles to available parking spots.",
+            "icon": "FiTrendingUp"
+          }
         }
-      }
-    },
-    "1": {
-      "title": "Traffic Control Assistance",
-      "description": "Gain real-time insights into traffic conditions and manage roadblocks efficiently.",
-      "imageSrc": "/images/mockup-2.webp",
-      "bullets": {
-        "length": 3,
-        "0": {
-          "title": "Live Traffic Monitoring",
-          "description": "Access real-time traffic data and respond proactively.",
-          "icon": "FiActivity"
-        },
-        "1": {
-          "title": "Incident Alerts",
-          "description": "Get instant notifications about accidents and road closures.",
-          "icon": "FiAlertTriangle"
-        },
-        "2": {
-          "title": "Smart Route Suggestions",
-          "description": "Find the fastest alternative routes during congestion.",
-          "icon": "FiNavigation"
+      },
+      "1": {
+        "title": "Thoothukudi Traffic Management",
+        "description": "Gain real-time insights into traffic conditions and manage roadblocks efficiently.",
+        "imageSrc": "/images/mockup-2.webp",
+        "bullets": {
+          "length": 3,
+          "0": {
+            "title": "Live Traffic Monitoring",
+            "description": "Access real-time traffic data for Thoothukudi and respond proactively.",
+            "icon": "FiActivity"
+          },
+          "1": {
+            "title": "Incident Alerts",
+            "description": "Get instant notifications about accidents and road closures in the city.",
+            "icon": "FiAlertTriangle"
+          },
+          "2": {
+            "title": "Smart Route Suggestions",
+            "description": "Find the fastest alternative routes during city congestion.",
+            "icon": "FiNavigation"
+          }
         }
-      }
-    },
-    "2": {
-      "title": "Secure & Reliable",
-      "description": "Ensure top-notch security for police operations with advanced encryption and authentication.",
-      "imageSrc": "/images/mockup-1.webp",
-      "bullets": {
-        "length": 3,
-        "0": {
-          "title": "End-to-End Encryption",
-          "description": "Secure all communications and data with military-grade encryption.",
-          "icon": "FiLock"
-        },
-        "1": {
-          "title": "Biometric Access",
-          "description": "Allow secure logins using fingerprint or facial recognition.",
-          "icon": "FiUser"
-        },
-        "2": {
-          "title": "Fraud & Anomaly Detection",
-          "description": "Detect unauthorized activities and prevent misuse of resources.",
-          "icon": "FiShield"
+      },
+      "2": {
+        "title": "Secure & Reliable",
+        "description": "Ensure top-notch security for Thoothukudi's urban parking operations.",
+        "imageSrc": "/images/mockup-1.webp",
+        "bullets": {
+          "length": 3,
+          "0": {
+            "title": "End-to-End Encryption",
+            "description": "Secure all communications and data with military-grade encryption.",
+            "icon": "FiLock"
+          },
+          "1": {
+            "title": "Biometric Access",
+            "description": "Secure logins using fingerprint or facial recognition.",
+            "icon": "FiUser"
+          },
+          "2": {
+            "title": "Fraud & Anomaly Detection",
+            "description": "Detect unauthorized activities and prevent misuse of resources.",
+            "icon": "FiShield"
+          }
         }
       }
     }
-  }
-},
-  
-
+  },
   "howItWorks": {
     "sectionLabel": "SIMPLE PROCESS",
     "heading": "How It Works",
-    "subheading": "Find and reserve parking spots in just a few simple steps",
+    "subheading": "Find and reserve parking spots in Thoothukudi in just a few simple steps",
     "ctaButton": "Download Now",
     "steps": {
       "0": {
         "title": "Find Parking",
-        "description": "Open the app and search for available parking spots near your destination"
+        "description": "Open the app and search for available parking spots in Thoothukudi"
       },
       "1": {
         "title": "Reserve a Spot",
@@ -135,7 +133,7 @@
       },
       "3": {
         "title": "Park Hassle-Free",
-        "description": "Just arrive at your reserved spot and enjoy stress-free parking"
+        "description": "Arrive at your reserved spot and enjoy stress-free parking in Thoothukudi"
       }
     }
   },
@@ -144,36 +142,35 @@
     "items": {
       "length": 3,
       "0": {
-        "name": "Ravi Kumar",
-        "role": "Daily Commuter",
-        "message": "This app has completely transformed my daily commute. I used to spend at least 15 minutes searching for parking, but now I can reserve a spot before I even leave home!",
+        "name": "Murugan Selvam",
+        "role": "Local Commuter",
+        "message": "This app has transformed parking in Thoothukudi. I no longer waste time searching for parking spots in the busy city center.",
         "avatar": "/images/testamonial1.png"
       },
       "1": {
-        "name": "Priya",
-        "role": "Business Owner",
-        "message": "As a business owner in a busy area, I was constantly worried about parking for my clients. This app has been a game-changer, allowing customers to find parking easily near my shop.",
+        "name": "Lakshmi Narayanan",
+        "role": "Local Business Owner",
+        "message": "As a business owner in Thoothukudi, this app helps my customers find convenient parking near my shop easily.",
         "avatar": "/images/testamonial3.png"
       },
       "2": {
-        "name": "Anand",
-        "role": "Traffic Officer",
-        "message": "From a law enforcement perspective, this app has significantly reduced illegal parking. The real-time reporting feature allows us to respond quickly to violations.",
+        "name": "Inspector Rajesh",
+        "role": "Thoothukudi Traffic Police",
+        "message": "The app has significantly improved parking management and reduced traffic violations in our city.",
         "avatar": "/images/testamonial2.png"
       }
     }
   },
-
   "faq": {
     "sectionLabel": "FAQ'S",
     "heading": "Frequently Asked Questions",
     "askUs": "Ask us anything!",
-    "email": "help@parkingTN.com",
+    "email": "help@thoothukudipolice.gov.in",
     "items": {
       "length": 3,
       "0": {
-        "question": "How do I find a parking spot?",
-        "answer": "Open the app, allow location access, and the map will show available parking spots near you. Tap on a spot to see details and reserve it."
+        "question": "How do I find a parking spot in Thoothukudi?",
+        "answer": "Open the app, allow location access, and the map will show available parking spots in Thoothukudi. Tap on a spot to see details and reserve it."
       },
       "1": {
         "question": "How do I pay for parking?",
@@ -187,25 +184,24 @@
   },
   "stats": {
     "parkingSpots": {
-      "title": "10,000+",
-      "description": "Mapped parking spots across Tamil Nadu, making it easier for citizens to find available parking spaces in urban areas."
+      "title": "500+",
+      "description": "Mapped parking spots across Thoothukudi, making it easier for citizens to find available parking spaces."
     },
     "timeReduction": {
-      "title": "45%",
-      "description": "Reduction in time spent searching for parking, leading to decreased traffic congestion and lower emissions in city centers."
+      "title": "40%",
+      "description": "Reduction in time spent searching for parking, leading to decreased traffic congestion in the city."
     },
     "safetyImprovement": {
-      "title": "30%",
+      "title": "25%",
       "description": "Improvement in traffic safety metrics since launch, with better enforcement and real-time violation reporting."
     }
   },
   "cta": {
-    "heading": "Download the Tamil Nadu Police Parking App Today",
-    "subheading": "Manage parking, pay fines, and get real-time traffic updates directly from your smartphone. Simplify your travel experience with the official Tamil Nadu Police Parking App."
+    "heading": "Download the Thoothukudi Police Parking App Today",
+    "subheading": "Manage parking, pay fines, and get real-time traffic updates directly from your smartphone. Simplify your travel experience in Thoothukudi."
   },
-
   "footer": {
-    "subheading": "Official parking and traffic management application for Tamil Nadu Police",
+    "subheading": "Official parking and traffic management application for Thoothukudi Police",
     "quickLinks": "Quick Links",
     "features": "Features",
     "howItWorks": "How It Works",
@@ -213,10 +209,10 @@
     "privacyPolicy": "Privacy Policy",
     "termsOfUse": "Terms of Use",
     "contactUs": "Contact Us",
-    "email": "Email",
-    "helpline": "Helpline",
-    "copyright": "Copyright © 2025 Tamil Nadu Police. All rights reserved.",
-    "officialApp": "Official parking and traffic control application for Tamil Nadu Police",
+    "email": "Email: contact@thoothukudipolice.gov.in",
+    "helpline": "Helpline: 0461-PARKING",
+    "copyright": "Copyright © 2025 Thoothukudi Police. All rights reserved.",
+    "officialApp": "Official parking and traffic control application for Thoothukudi Police",
     "emergencyServices": "For emergency services, please dial 100 or 112"
   }
 }

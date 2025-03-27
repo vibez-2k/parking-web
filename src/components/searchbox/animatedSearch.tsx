@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react"
 import { Input } from "@/components/ui/input"
 import { motion, AnimatePresence } from "framer-motion"
-import { Search, Send, BarChart2, Globe, Video, PlaneTakeoff, AudioLines } from "lucide-react"
+import { Search, Send, BarChart2, Globe, Video, PlaneTakeoff, AudioLines, BookOpen, Users } from "lucide-react"
 import useDebounce from "@/hooks/use-debounce"
 
 interface Action {
@@ -60,6 +60,23 @@ const allActions = [
     short: "",
     end: "Command",
   },
+  // New actions related to Thoothukudi police and common man
+  {
+    id: "6",
+    label: "Thoothukudi Police Case",
+    icon: <BookOpen className="h-4 w-4 text-red-500" />,
+    description: "Legal Investigation",
+    short: "",
+    end: "Details",
+  },
+  {
+    id: "7",
+    label: "Common Man Rights",
+    icon: <Users className="h-4 w-4 text-green-600" />,
+    description: "Social Justice",
+    short: "",
+    end: "Information",
+  },
 ]
 
 function ActionSearchBar({ actions = allActions }: { actions?: Action[] }) {
@@ -83,7 +100,7 @@ function ActionSearchBar({ actions = allActions }: { actions?: Action[] }) {
 
     const normalizedQuery = debouncedQuery.toLowerCase().trim()
     const filteredActions = allActions.filter((action) => {
-      const searchableText = action.label.toLowerCase()
+      const searchableText = `${action.label.toLowerCase()} ${action.description?.toLowerCase() || ''}`
       return searchableText.includes(normalizedQuery)
     })
 
@@ -149,13 +166,10 @@ function ActionSearchBar({ actions = allActions }: { actions?: Action[] }) {
     <div className="w-full max-w-xl mx-auto">
       <div className="relative flex flex-col justify-start items-center min-h-[300px]">
         <div className="w-full max-w-sm sticky top-0 bg-background z-10 pt-4 pb-1">
-          {/* <label className="text-xs font-medium text-gray-500 dark:text-gray-400 mb-1 block" htmlFor="search">
-            Search Commands
-          </label> */}
           <div className="relative">
             <Input
               type="text"
-              placeholder="What's up?"
+              placeholder="Search Thoothukudi police or common man"
               value={query}
               onChange={handleInputChange}
               onFocus={handleFocus}
@@ -172,7 +186,7 @@ function ActionSearchBar({ actions = allActions }: { actions?: Action[] }) {
                     exit={{ y: 20, opacity: 0 }}
                     transition={{ duration: 0.2 }}
                   >
-                    <Send className="w-4 h-4 text-gray-400 dark:text-gray-500" />
+                    <Send className="w-4 h-4 text-gray-400 " />
                   </motion.div>
                 ) : (
                   <motion.div
@@ -182,7 +196,7 @@ function ActionSearchBar({ actions = allActions }: { actions?: Action[] }) {
                     exit={{ y: 20, opacity: 0 }}
                     transition={{ duration: 0.2 }}
                   >
-                    <Search className="w-4 h-4 text-gray-400 dark:text-gray-500" />
+                    <Search className="w-4 h-4 text-gray-400 " />
                   </motion.div>
                 )}
               </AnimatePresence>
@@ -194,7 +208,7 @@ function ActionSearchBar({ actions = allActions }: { actions?: Action[] }) {
           <AnimatePresence>
             {isFocused && result && !selectedAction && (
               <motion.div
-                className="w-full border rounded-md shadow-sm overflow-hidden dark:border-gray-800 bg-white dark:bg-black mt-1"
+                className="w-full border rounded-md shadow-sm overflow-hidden  bg-white  mt-52"
                 variants={container}
                 initial="hidden"
                 animate="show"
@@ -204,7 +218,7 @@ function ActionSearchBar({ actions = allActions }: { actions?: Action[] }) {
                   {result.actions.map((action) => (
                     <motion.li
                       key={action.id}
-                      className="px-3 py-2 flex items-center justify-between hover:bg-gray-200 dark:hover:bg-zinc-900  cursor-pointer rounded-md"
+                      className="px-3 py-2 flex items-center justify-between hover:bg-gray-200   cursor-pointer rounded-md"
                       variants={item}
                       layout
                       onClick={() => setSelectedAction(action)}
@@ -212,7 +226,7 @@ function ActionSearchBar({ actions = allActions }: { actions?: Action[] }) {
                       <div className="flex items-center gap-2 justify-between">
                         <div className="flex items-center gap-2">
                           <span className="text-gray-500">{action.icon}</span>
-                          <span className="text-sm font-medium text-gray-900 dark:text-gray-100">{action.label}</span>
+                          <span className="text-sm font-medium text-gray-900 ">{action.label}</span>
                           <span className="text-xs text-gray-400">{action.description}</span>
                         </div>
                       </div>
@@ -223,7 +237,7 @@ function ActionSearchBar({ actions = allActions }: { actions?: Action[] }) {
                     </motion.li>
                   ))}
                 </motion.ul>
-                <div className="mt-2 px-3 py-2 border-t border-gray-100 dark:border-gray-800">
+                <div className="mt-2 px-3 py-2 border-t border-gray-100 ">
                   <div className="flex items-center justify-between text-xs text-gray-500">
                     <span>Press ⌘K to open commands</span>
                     <span>ESC to cancel</span>
@@ -239,4 +253,3 @@ function ActionSearchBar({ actions = allActions }: { actions?: Action[] }) {
 }
 
 export default ActionSearchBar
-
