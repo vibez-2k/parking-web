@@ -257,7 +257,7 @@ export default function TransactionHistoryPage() {
                               className={cn(
                                 "capitalize",
                                 transaction.status === "successful" &&
-                                  "border-green-500 text-green-600 bg-green-50 hover:bg-green-100 dark:bg-green-900/20 dark:text-green-400 dark:hover:bg-green-900/30",
+                                  "border-green-500 text-green-600 bg-green-50 hover:bg-green-100 ",
                               )}
                             >
                               {transaction.status === "successful" ? (

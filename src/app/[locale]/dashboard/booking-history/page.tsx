@@ -179,7 +179,7 @@ export default function ParkingHistoryPage() {
               </div>
             </TabsContent>
             <TabsContent value="calendar" className="mt-4">
-              <div className="bg-white dark:bg-gray-800 rounded-lg border p-6 text-center">
+              <div className="bg-white  rounded-lg border p-6 text-center">
                 <Calendar className="mx-auto h-12 w-12 text-muted-foreground opacity-50" />
                 <h3 className="mt-4 text-lg font-medium">Calendar View</h3>
                 <p className="mt-2 text-sm text-muted-foreground">Calendar view is coming soon</p>
@@ -201,7 +201,7 @@ function ParkingHistoryCard({ item }: ParkingHistoryCardProps) {
     <Card className="overflow-hidden transition-all hover:shadow-md">
       <CardContent className="p-0">
         <div className="flex flex-col md:flex-row">
-          <div className="relative md:w-1/4 bg-blue-50 dark:bg-blue-900/20 p-6 flex flex-col justify-center items-center">
+          <div className="relative md:w-1/4 bg-blue-50  p-6 flex flex-col justify-center items-center">
             <div className="absolute top-4 left-4">
               <Badge
                 variant={item.status === "active" ? "default" : "secondary"}
@@ -210,7 +210,7 @@ function ParkingHistoryCard({ item }: ParkingHistoryCardProps) {
                 {item.status}
               </Badge>
             </div>
-            <Car className="h-12 w-12 text-blue-600 dark:text-blue-400 mb-2" />
+            <Car className="h-12 w-12 text-blue-600  mb-2" />
             <div className="text-center">
               <p className="font-medium">{item.vehicle}</p>
               <p className="text-sm text-muted-foreground">{item.licensePlate}</p>
