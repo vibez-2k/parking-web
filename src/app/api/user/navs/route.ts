@@ -109,11 +109,11 @@ export async function POST(request: Request) {
             },
             {
               title: "venue status cards",
-              url: "/dashboard/venue-status",
+              url: "/dashboard/parking-venues-cards",
             },
             {
               title: "venue status map",
-              url: "/dashboard/venue-status-map",
+              url: "/dashboard/parking-venues-map",
             }
           ],
         },
@@ -123,7 +123,7 @@ export async function POST(request: Request) {
           items: [
             {
               title: "video live feeds",
-              url: "/dashboard/live-feeds",
+              url: "/dashboard/live-feed",
             },
           ],
         },
