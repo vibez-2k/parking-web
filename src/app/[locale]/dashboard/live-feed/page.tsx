@@ -75,19 +75,15 @@ export default function CCTVVideoUI() {
                         >
                             <div className="aspect-video relative">
                                 {isPlaying ? (
-                                    <iframe
-                                        src={`https://player.vimeo.com/video/1055784280?autoplay=1&title=0&byline=0&portrait=0`}
-                                        className="w-full h-full"
-                                        allow="autoplay; fullscreen; picture-in-picture"
-                                        allowFullScreen
-                                    />
+                                   <iframe src="https://player.vimeo.com/video/20674907?autoplay=1&title=0&byline=0&portrait=0" className="w-full h-full" allow="autoplay; fullscreen; picture-in-picture" allowFullScreen></iframe>
+
                                 ) : (
                                     <div 
                                         className="absolute inset-0 flex items-center justify-center cursor-pointer"
                                         onClick={() => setIsPlaying(true)}
                                     >
                                         <Image
-                                            src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-lQJe60OxxGongNvLeFeJWGT3Gz0Rra.png"
+                                            src="https://images.unsplash.com/photo-1573348722427-f1d6819fdf98?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
                                             alt="Camera preview"
                                             fill
                                             className="object-cover"
