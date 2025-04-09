@@ -1,22 +1,32 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from "react"
-import { Input } from "@/components/ui/input"
-import { motion, AnimatePresence } from "framer-motion"
-import { Search, Send, BarChart2, Globe, Video, PlaneTakeoff, AudioLines, BookOpen, Users } from "lucide-react"
-import useDebounce from "@/hooks/use-debounce"
+import { useState, useEffect } from "react";
+import { Input } from "@/components/ui/input";
+import { motion, AnimatePresence } from "framer-motion";
+import {
+  Search,
+  Send,
+  BarChart2,
+  Globe,
+  Video,
+  PlaneTakeoff,
+  AudioLines,
+  BookOpen,
+  Users,
+} from "lucide-react";
+import useDebounce from "@/hooks/use-debounce";
 
 interface Action {
-  id: string
-  label: string
-  icon: React.ReactNode
-  description?: string
-  short?: string
-  end?: string
+  id: string;
+  label: string;
+  icon: React.ReactNode;
+  description?: string;
+  short?: string;
+  end?: string;
 }
 
 interface SearchResult {
-  actions: Action[]
+  actions: Action[];
 }
 
 const allActions = [
@@ -77,40 +87,42 @@ const allActions = [
     short: "",
     end: "Information",
   },
-]
+];
 
 function ActionSearchBar({ actions = allActions }: { actions?: Action[] }) {
-  const [query, setQuery] = useState("")
-  const [result, setResult] = useState<SearchResult | null>(null)
-  const [isFocused, setIsFocused] = useState(false)
-  const [isTyping, setIsTyping] = useState(false)
-  const [selectedAction, setSelectedAction] = useState<Action | null>(null)
-  const debouncedQuery = useDebounce(query, 200)
+  const [query, setQuery] = useState("");
+  const [result, setResult] = useState<SearchResult | null>(null);
+  const [isFocused, setIsFocused] = useState(false);
+  const [isTyping, setIsTyping] = useState(false);
+  const [selectedAction, setSelectedAction] = useState<Action | null>(null);
+  const debouncedQuery = useDebounce(query, 200);
 
   useEffect(() => {
     if (!isFocused) {
-      setResult(null)
-      return
+      setResult(null);
+      return;
     }
 
     if (!debouncedQuery) {
-      setResult({ actions: allActions })
-      return
+      setResult({ actions: allActions });
+      return;
     }
 
-    const normalizedQuery = debouncedQuery.toLowerCase().trim()
+    const normalizedQuery = debouncedQuery.toLowerCase().trim();
     const filteredActions = allActions.filter((action) => {
-      const searchableText = `${action.label.toLowerCase()} ${action.description?.toLowerCase() || ''}`
-      return searchableText.includes(normalizedQuery)
-    })
+      const searchableText = `${action.label.toLowerCase()} ${
+        action.description?.toLowerCase() || ""
+      }`;
+      return searchableText.includes(normalizedQuery);
+    });
 
-    setResult({ actions: filteredActions })
-  }, [debouncedQuery, isFocused])
+    setResult({ actions: filteredActions });
+  }, [debouncedQuery, isFocused]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setQuery(e.target.value)
-    setIsTyping(true)
-  }
+    setQuery(e.target.value);
+    setIsTyping(true);
+  };
 
   const container = {
     hidden: { opacity: 0, height: 0 },
@@ -136,7 +148,7 @@ function ActionSearchBar({ actions = allActions }: { actions?: Action[] }) {
         },
       },
     },
-  }
+  };
 
   const item = {
     hidden: { opacity: 0, y: 20 },
@@ -154,18 +166,17 @@ function ActionSearchBar({ actions = allActions }: { actions?: Action[] }) {
         duration: 0.2,
       },
     },
-  }
+  };
 
-  // Reset selectedAction when focusing the input
   const handleFocus = () => {
-    setSelectedAction(null)
-    setIsFocused(true)
-  }
+    setSelectedAction(null);
+    setIsFocused(true);
+  };
 
   return (
-    <div className="w-full max-w-xl mx-auto">
+    <div className="w-full px-4 md:px-0 md:max-w-xl mx-auto">
       <div className="relative flex flex-col justify-start items-center min-h-[300px]">
-        <div className="w-full max-w-sm sticky top-0 bg-background z-10 pt-4 pb-1">
+        <div className="w-full md:max-w-sm sticky top-0 bg-background z-10 pt-4 pb-1">
           <div className="relative">
             <Input
               type="text"
@@ -174,7 +185,7 @@ function ActionSearchBar({ actions = allActions }: { actions?: Action[] }) {
               onChange={handleInputChange}
               onFocus={handleFocus}
               onBlur={() => setTimeout(() => setIsFocused(false), 200)}
-              className="pl-3 pr-9 py-1.5 h-9 text-sm rounded-lg focus-visible:ring-offset-0"
+              className="w-full pl-3 pr-9 py-1.5 h-9 text-sm rounded-lg focus-visible:ring-offset-0"
             />
             <div className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4">
               <AnimatePresence mode="popLayout">
@@ -186,7 +197,7 @@ function ActionSearchBar({ actions = allActions }: { actions?: Action[] }) {
                     exit={{ y: 20, opacity: 0 }}
                     transition={{ duration: 0.2 }}
                   >
-                    <Send className="w-4 h-4 text-gray-400 " />
+                    <Send className="w-4 h-4 text-gray-400" />
                   </motion.div>
                 ) : (
                   <motion.div
@@ -196,7 +207,7 @@ function ActionSearchBar({ actions = allActions }: { actions?: Action[] }) {
                     exit={{ y: 20, opacity: 0 }}
                     transition={{ duration: 0.2 }}
                   >
-                    <Search className="w-4 h-4 text-gray-400 " />
+                    <Search className="w-4 h-4 text-gray-400" />
                   </motion.div>
                 )}
               </AnimatePresence>
@@ -204,42 +215,50 @@ function ActionSearchBar({ actions = allActions }: { actions?: Action[] }) {
           </div>
         </div>
 
-        <div className="w-full max-w-sm">
+        <div className="w-full md:max-w-sm">
           <AnimatePresence>
             {isFocused && result && !selectedAction && (
               <motion.div
-                className="w-full border rounded-md shadow-sm overflow-hidden  bg-white  mt-52"
+                className="w-full rounded-md shadow-sm overflow-hidden bg-white mt-[22rem] md:mt-80"
                 variants={container}
                 initial="hidden"
                 animate="show"
                 exit="exit"
               >
-                <motion.ul>
+                <motion.ul className="max-h-[60vh] overflow-y-auto">
                   {result.actions.map((action) => (
                     <motion.li
                       key={action.id}
-                      className="px-3 py-2 flex items-center justify-between hover:bg-gray-200   cursor-pointer rounded-md"
+                      className="px-3 py-2 flex flex-col sm:flex-row sm:items-center justify-between hover:bg-gray-200 cursor-pointer rounded-md"
                       variants={item}
                       layout
                       onClick={() => setSelectedAction(action)}
                     >
-                      <div className="flex items-center gap-2 justify-between">
-                        <div className="flex items-center gap-2">
-                          <span className="text-gray-500">{action.icon}</span>
-                          <span className="text-sm font-medium text-gray-900 ">{action.label}</span>
-                          <span className="text-xs text-gray-400">{action.description}</span>
-                        </div>
-                      </div>
                       <div className="flex items-center gap-2">
-                        <span className="text-xs text-gray-400">{action.short}</span>
-                        <span className="text-xs text-gray-400 text-right">{action.end}</span>
+                        <span className="text-gray-500">{action.icon}</span>
+                        <span className="text-sm font-medium text-gray-900">
+                          {action.label}
+                        </span>
+                        <span className="text-xs text-gray-400 hidden sm:inline">
+                          {action.description}
+                        </span>
+                      </div>
+                      <div className="flex items-center gap-2 mt-1 sm:mt-0">
+                        <span className="text-xs text-gray-400">
+                          {action.short}
+                        </span>
+                        <span className="text-xs text-gray-400 text-right">
+                          {action.end}
+                        </span>
                       </div>
                     </motion.li>
                   ))}
                 </motion.ul>
-                <div className="mt-2 px-3 py-2 border-t border-gray-100 ">
-                  <div className="flex items-center justify-between text-xs text-gray-500">
-                    <span>Press ⌘K to open commands</span>
+                <div className="mt-2 px-3 py-2 border-t border-gray-100">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between text-xs text-gray-500">
+                    <span className="mb-1 sm:mb-0">
+                      Press ⌘K to open commands
+                    </span>
                     <span>ESC to cancel</span>
                   </div>
                 </div>
@@ -249,7 +268,7 @@ function ActionSearchBar({ actions = allActions }: { actions?: Action[] }) {
         </div>
       </div>
     </div>
-  )
+  );
 }
 
-export default ActionSearchBar
+export default ActionSearchBar;

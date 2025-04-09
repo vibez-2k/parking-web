@@ -1,7 +1,5 @@
-import { GoogleAnalytics } from '@next/third-parties/google';
 import { Manrope, Source_Sans_3 } from "next/font/google";
 
-import { siteDetails } from '@/data/siteDetails';
 import { routing } from '@/i18n/routing';
 
 import { ThemeProvider } from '@/components/themes/theme-provider';
@@ -38,7 +36,6 @@ export default function RootLayout({
       <body
         className={`${manrope.className} ${sourceSans.className} antialiased`}
       >
-        {siteDetails.googleAnalyticsId && <GoogleAnalytics gaId={siteDetails.googleAnalyticsId} />}
         <main>
           <ThemeProvider
             attribute="class"
