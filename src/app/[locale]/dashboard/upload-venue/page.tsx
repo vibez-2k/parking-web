@@ -9,7 +9,7 @@ import { FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessa
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Checkbox } from "@/components/ui/checkbox"
-import { toast } from "@/components/custom/use-toast"
+import { useToast } from "@/hooks/use-toast"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { useState } from "react"
 import { ParkingLayoutEditor } from "@/components/custom/parking-layout-editor"
@@ -248,6 +248,7 @@ const stepFields = {
 }
 
 export default function Home() {
+  const toast = useToast()
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [venueRegistered, setVenueRegistered] = useState(false)
   const [venueId, setVenueId] = useState("")
@@ -261,7 +262,7 @@ export default function Home() {
   const validateStep = async (stepFields: string[]) => {
     const result = await form.trigger(stepFields as any)
     if (!result) {
-      toast({
+      toast.toast({
         title: "Validation Error",
         description: "Please check your inputs and try again.",
         variant: "destructive",
@@ -284,7 +285,7 @@ export default function Home() {
       const newVenueId = `VEN-${Math.floor(100000 + Math.random() * 900000)}`
       setVenueId(newVenueId)
 
-      toast({
+      toast.toast({
         title: "Venue Registered Successfully!",
         description: "Your parking venue has been added to our platform.",
         variant: "success",
@@ -292,7 +293,7 @@ export default function Home() {
 
       setVenueRegistered(true)
     } catch (error) {
-      toast({
+      toast.toast({
         title: "Registration Failed",
         description: "There was an error registering your venue. Please try again.",
         variant: "destructive",

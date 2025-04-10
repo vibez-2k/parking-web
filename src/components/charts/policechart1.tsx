@@ -1,6 +1,6 @@
 "use client";
 
-import { Activity, TrendingUp } from "lucide-react";
+import { ShieldAlert, AlertTriangle, Car, TrendingUp } from "lucide-react";
 import { Area, AreaChart, CartesianGrid, XAxis } from "recharts";
 
 import {
@@ -19,48 +19,48 @@ import {
 } from "@/components/ui/chart";
 
 const chartData = [
-  { month: "January", desktop: 186, mobile: 80, parking: 120 },
-  { month: "February", desktop: 305, mobile: 200, parking: 150 },
-  { month: "March", desktop: 237, mobile: 120, parking: 110 },
-  { month: "April", desktop: 73, mobile: 190, parking: 130 },
-  { month: "May", desktop: 209, mobile: 130, parking: 140 },
-  { month: "June", desktop: 214, mobile: 140, parking: 135 },
+  { month: "January", violations: 24, incidents: 8, suspicious: 12 },
+  { month: "February", violations: 31, incidents: 12, suspicious: 15 },
+  { month: "March", violations: 19, incidents: 7, suspicious: 11 },
+  { month: "April", violations: 26, incidents: 9, suspicious: 13 },
+  { month: "May", violations: 22, incidents: 8, suspicious: 14 },
+  { month: "June", violations: 28, incidents: 11, suspicious: 17 },
 ];
 
-// Calculate total and average parking usage
-const totalParkingUsage = chartData.reduce((acc, cur) => acc + cur.parking, 0);
-const avgParkingUsage = (totalParkingUsage / chartData.length).toFixed(1);
+// Calculate total incidents and monthly average
+const totalIncidents = chartData.reduce((acc, cur) => acc + cur.incidents, 0);
+const avgIncidents = (totalIncidents / chartData.length).toFixed(1);
 
 const chartConfig = {
-  desktop: {
-    label: "Desktop",
+  violations: {
+    label: "Traffic Violations",
     color: "hsl(var(--chart-1))",
   },
-  mobile: {
-    label: "Mobile",
+  incidents: {
+    label: "Security Incidents",
     color: "hsl(var(--chart-2))",
   },
-  parking: {
-    label: "Parking",
+  suspicious: {
+    label: "Suspicious Activity",
     color: "hsl(var(--chart-3))",
   },
 } satisfies ChartConfig;
 
-export function ChartArea() {
+export function PoliceParkingChart() {
   return (
     <Card className="bg-blue-50/70 hover:bg-blue-100/50 transition-colors">
       <CardHeader className="flex flex-row items-top justify-between space-y-0 pb-2">
         <div>
-          <CardTitle>Parking Usage</CardTitle>
-          <CardDescription>Showing average parking lot usage for the last 6 months</CardDescription>
+          <CardTitle>Security Monitoring</CardTitle>
+          <CardDescription>Monthly parking enforcement and security data</CardDescription>
         </div>
-        <Activity className="h-4 w-4 text-muted-foreground" />
+        <ShieldAlert className="h-4 w-4 text-red-500" />
       </CardHeader>
 
       {/* Metric Display */}
       <CardContent className="flex flex-col items-center justify-center pb-4">
-        <h2 className="text-3xl font-bold">{avgParkingUsage}</h2>
-        <span className="text-muted-foreground text-sm">Avg Parking Usage</span>
+        <h2 className="text-3xl font-bold">{avgIncidents}</h2>
+        <span className="text-muted-foreground text-sm">Avg Monthly Security Incidents</span>
       </CardContent>
 
       <CardContent>
@@ -83,27 +83,27 @@ export function ChartArea() {
             />
             <ChartTooltip cursor={false} content={<ChartTooltipContent indicator="dot" />} />
             <Area
-              dataKey="mobile"
+              dataKey="violations"
               type="natural"
-              fill="var(--color-mobile)"
+              fill="var(--color-violations)"
               fillOpacity={0.4}
-              stroke="var(--color-mobile)"
+              stroke="var(--color-violations)"
               stackId="a"
             />
             <Area
-              dataKey="desktop"
+              dataKey="incidents"
               type="natural"
-              fill="var(--color-desktop)"
+              fill="var(--color-incidents)"
               fillOpacity={0.4}
-              stroke="var(--color-desktop)"
+              stroke="var(--color-incidents)"
               stackId="a"
             />
             <Area
-              dataKey="parking"
+              dataKey="suspicious"
               type="natural"
-              fill="var(--color-parking)"
+              fill="var(--color-suspicious)"
               fillOpacity={0.4}
-              stroke="var(--color-parking)"
+              stroke="var(--color-suspicious)"
               stackId="a"
             />
           </AreaChart>
@@ -114,7 +114,7 @@ export function ChartArea() {
         <div className="flex w-full items-start gap-2 text-sm">
           <div className="grid gap-2">
             <div className="flex items-center gap-2 font-medium leading-none">
-              Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
+              <AlertTriangle className="h-4 w-4 text-amber-500" /> Incident rate up 10.5% from last month
             </div>
             <div className="flex items-center gap-2 leading-none text-muted-foreground">
               January - June 2024

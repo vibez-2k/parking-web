@@ -33,7 +33,7 @@ export function ChartLine() {
       <CardHeader>
         <CardTitle className="flex items-center justify-center gap-2"> 
           <LineChartIcon className="h-4 w-4 text-muted-foreground" />
-          Line Chart - Multiple</CardTitle>
+          Visitor Trend</CardTitle>
         <CardDescription className="text-center">January - June 2024</CardDescription>
       </CardHeader>
 
