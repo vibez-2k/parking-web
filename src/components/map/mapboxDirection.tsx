@@ -23,6 +23,7 @@ const MapboxParkingRouteMap: React.FC = () => {
   const [parkingLocations, setParkingLocations] = useState<ParkingLocation[]>([]);
   const [selectedLocation, setSelectedLocation] = useState<ParkingLocation | null>(null);
   const [isMobile, setIsMobile] = useState(false);
+  const [isLoadingLocation, setIsLoadingLocation] = useState(true);
 
   useEffect(() => {
     const checkMobile = () => {
@@ -101,11 +102,13 @@ const MapboxParkingRouteMap: React.FC = () => {
 
     if (!mapboxgl.accessToken) {
       setError('Mapbox access token is missing');
+      setIsLoadingLocation(false);
       return;
     }
 
     const initializeMap = (userPos: mapboxgl.LngLat) => {
       setUserLocation(userPos);
+      setIsLoadingLocation(false);
 
       map.current = new mapboxgl.Map({
         container: mapContainer.current!,
@@ -207,12 +210,14 @@ const MapboxParkingRouteMap: React.FC = () => {
         },
         (err) => {
           console.error(err);
+          setIsLoadingLocation(false);
           // Use default location if geolocation fails
           const defaultPos = new mapboxgl.LngLat(78.127725, 8.789767);
           initializeMap(defaultPos);
         }
       );
     } else {
+      setIsLoadingLocation(false);
       // Use default location if geolocation is not supported
       const defaultPos = new mapboxgl.LngLat(78.127725, 8.789767);
       initializeMap(defaultPos);
@@ -232,6 +237,19 @@ const MapboxParkingRouteMap: React.FC = () => {
       margin: isMobile ? '10px' : '20px',
       fontSize: isMobile ? '14px' : '16px'
     }}>{error}</div>;
+  }
+
+  if (isLoadingLocation) {
+    return <div style={{
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      height: '100vh',
+      fontSize: isMobile ? '16px' : '18px',
+      color: '#666'
+    }}>
+      Getting your location...
+    </div>;
   }
 
   return (

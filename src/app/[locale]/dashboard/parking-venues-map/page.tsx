@@ -13,31 +13,60 @@ function ParkingMapPage() {
   const locationFetched = useRef(false);
 
   useEffect(() => {
-    if (!locationFetched.current && navigator.geolocation) {
+    if (!locationFetched.current) {
       locationFetched.current = true;
 
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          setUserLocation({
-            latitude: position.coords.latitude,
-            longitude: position.coords.longitude
-          });
-          setIsLoading(false);
-        },
-        (err) => {
-          console.error("Error getting location:", err);
-          setError("Unable to retrieve your location");
-          setIsLoading(false);
-        },
-        {
-          enableHighAccuracy: true,
-          timeout: 5000,
-          maximumAge: 0
-        }
-      );
-    } else if (!navigator.geolocation) {
-      setError("Geolocation is not supported by your browser");
-      setIsLoading(false);
+      // Check if running in React Native WebView
+      if (window.ReactNativeWebView) {
+        // Request location from React Native
+        window.ReactNativeWebView.postMessage(JSON.stringify({
+          type: 'GET_LOCATION'
+        }));
+
+        // Listen for location data from React Native
+        window.addEventListener('message', (event) => {
+          try {
+            const data = JSON.parse(event.data);
+            if (data.type === 'LOCATION_DATA') {
+              setUserLocation({
+                latitude: data.latitude,
+                longitude: data.longitude
+              });
+              setIsLoading(false);
+            } else if (data.type === 'LOCATION_ERROR') {
+              setError(data.message || "Unable to retrieve your location");
+              setIsLoading(false);
+            }
+          } catch (err) {
+            console.error('Error parsing location data:', err);
+          }
+        });
+      } 
+      // If running in web browser
+      else if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            setUserLocation({
+              latitude: position.coords.latitude,
+              longitude: position.coords.longitude
+            });
+            setIsLoading(false);
+          },
+          (err) => {
+            console.error("Error getting location:", err);
+            setError("Unable to retrieve your location");
+            setIsLoading(false);
+          },
+          {
+            enableHighAccuracy: true,
+            timeout: 5000,
+            maximumAge: 0
+          }
+        );
+      } else {
+        setError("Geolocation is not supported by your browser");
+        setIsLoading(false);
+      }
     }
   }, []);
 
