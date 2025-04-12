@@ -5,8 +5,8 @@ import React, { useState, useEffect, useRef } from 'react';
 
 function ParkingMapPage() {
   const [userLocation, setUserLocation] = useState({
-    longitude: 77.5946,
-    latitude: 12.9716
+    latitude: 8.789767,
+    longitude: 78.127725
   });
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);

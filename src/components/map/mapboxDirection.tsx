@@ -104,6 +104,98 @@ const MapboxParkingRouteMap: React.FC = () => {
       return;
     }
 
+    const initializeMap = (userPos: mapboxgl.LngLat) => {
+      setUserLocation(userPos);
+
+      map.current = new mapboxgl.Map({
+        container: mapContainer.current!,
+        style: 'mapbox://styles/mapbox/streets-v12',
+        center: [userPos.lng, userPos.lat],
+        zoom: isMobile ? 13 : 14
+      });
+
+      const userMarkerEl = document.createElement('div');
+      userMarkerEl.innerHTML = `
+        <div style="
+          width: ${isMobile ? '16px' : '20px'}; 
+          height: ${isMobile ? '16px' : '20px'}; 
+          background-color: #4285F4; 
+          border-radius: 50%; 
+          border: 2px solid white;
+          box-shadow: 0 0 10px rgba(66,133,244,0.5);
+        "></div>
+      `;
+
+      new mapboxgl.Marker(userMarkerEl)
+        .setLngLat(userPos)
+        .addTo(map.current);
+
+      const dummyLocations: ParkingLocation[] = [
+        {
+          id: 1,
+          name: "Central Parking Garage",
+          latitude: userPos.lat,
+          longitude: userPos.lng + 0.01,
+          capacity: 200,
+          availableSpots: 75,
+          address: "123 Main Street"
+        },
+        {
+          id: 2,
+          name: "North Parking Lot",
+          latitude: userPos.lat + 0.015,
+          longitude: userPos.lng,
+          capacity: 150,
+          availableSpots: 50,
+          address: "456 North Avenue"
+        },
+        {
+          id: 3,
+          name: "West Parking Complex",
+          latitude: userPos.lat,
+          longitude: userPos.lng - 0.02,
+          capacity: 180,
+          availableSpots: 90,
+          address: "789 West Street"
+        },
+        {
+          id: 4,
+          name: "South Parking Zone",
+          latitude: userPos.lat - 0.025,
+          longitude: userPos.lng,
+          capacity: 120,
+          availableSpots: 40,
+          address: "321 South Road"
+        }
+      ];
+
+      setParkingLocations(dummyLocations);
+
+      dummyLocations.forEach(location => {
+        const parkingMarkerEl = document.createElement('div');
+        parkingMarkerEl.innerHTML = `
+          <div style="
+            width: ${isMobile ? '24px' : '30px'}; 
+            height: ${isMobile ? '24px' : '30px'}; 
+            background-color: #EA4335; 
+            border-radius: 50%; 
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: ${isMobile ? '12px' : '14px'};
+            font-weight: bold;
+            border: 2px solid white;
+            box-shadow: 0 0 8px rgba(234,67,53,0.5);
+          ">P</div>
+        `;
+
+        new mapboxgl.Marker(parkingMarkerEl)
+          .setLngLat([location.longitude, location.latitude])
+          .addTo(map.current!);
+      });
+    };
+
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
@@ -111,103 +203,19 @@ const MapboxParkingRouteMap: React.FC = () => {
             position.coords.longitude,
             position.coords.latitude
           );
-          setUserLocation(userPos);
-
-          map.current = new mapboxgl.Map({
-            container: mapContainer.current!,
-            style: 'mapbox://styles/mapbox/streets-v12',
-            center: [userPos.lng, userPos.lat],
-            zoom: isMobile ? 13 : 14
-          });
-
-          const userMarkerEl = document.createElement('div');
-          userMarkerEl.innerHTML = `
-            <div style="
-              width: ${isMobile ? '16px' : '20px'}; 
-              height: ${isMobile ? '16px' : '20px'}; 
-              background-color: #4285F4; 
-              border-radius: 50%; 
-              border: 2px solid white;
-              box-shadow: 0 0 10px rgba(66,133,244,0.5);
-            "></div>
-          `;
-
-          new mapboxgl.Marker(userMarkerEl)
-            .setLngLat(userPos)
-            .addTo(map.current);
-
-          const dummyLocations: ParkingLocation[] = [
-            {
-              id: 1,
-              name: "Central Parking Garage",
-              latitude: userPos.lat,
-              longitude: userPos.lng + 0.01,
-              capacity: 200,
-              availableSpots: 75,
-              address: "123 Main Street"
-            },
-            {
-              id: 2,
-              name: "North Parking Lot",
-              latitude: userPos.lat + 0.015,
-              longitude: userPos.lng,
-              capacity: 150,
-              availableSpots: 50,
-              address: "456 North Avenue"
-            },
-            {
-              id: 3,
-              name: "West Parking Complex",
-              latitude: userPos.lat,
-              longitude: userPos.lng - 0.02,
-              capacity: 180,
-              availableSpots: 90,
-              address: "789 West Street"
-            },
-            {
-              id: 4,
-              name: "South Parking Zone",
-              latitude: userPos.lat - 0.025,
-              longitude: userPos.lng,
-              capacity: 120,
-              availableSpots: 40,
-              address: "321 South Road"
-            }
-          ];
-
-          setParkingLocations(dummyLocations);
-
-          dummyLocations.forEach(location => {
-            const parkingMarkerEl = document.createElement('div');
-            parkingMarkerEl.innerHTML = `
-              <div style="
-                width: ${isMobile ? '24px' : '30px'}; 
-                height: ${isMobile ? '24px' : '30px'}; 
-                background-color: #EA4335; 
-                border-radius: 50%; 
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                color: white;
-                font-size: ${isMobile ? '12px' : '14px'};
-                font-weight: bold;
-                border: 2px solid white;
-                box-shadow: 0 0 8px rgba(234,67,53,0.5);
-              ">P</div>
-            `;
-
-            new mapboxgl.Marker(parkingMarkerEl)
-              .setLngLat([location.longitude, location.latitude])
-              .addTo(map.current!);
-          });
+          initializeMap(userPos);
         },
         (err) => {
-          setError('Could not get your location. Please enable location services.');
           console.error(err);
+          // Use default location if geolocation fails
+          const defaultPos = new mapboxgl.LngLat(78.127725, 8.789767);
+          initializeMap(defaultPos);
         }
       );
     } else {
-      setError('Geolocation is not supported by your browser');
+      // Use default location if geolocation is not supported
+      const defaultPos = new mapboxgl.LngLat(78.127725, 8.789767);
+      initializeMap(defaultPos);
     }
 
     return () => {
