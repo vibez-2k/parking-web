@@ -29,7 +29,6 @@ const MapboxGlobeView: React.FC<MapboxGlobeViewProps> = ({
   const map = useRef<mapboxgl.Map | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [parkingLocations, setParkingLocations] = useState<ParkingLocation[]>([]);
-  const activePopupRef = useRef<mapboxgl.Popup | null>(null);
 
   const generateClusteredParkingLocations = (
     centerLongitude: number,
@@ -108,25 +107,25 @@ const MapboxGlobeView: React.FC<MapboxGlobeViewProps> = ({
             markerEl.style.border = '2px solid #FFFFFF';
             markerEl.style.transition = 'all 0.3s ease';
 
-            markerEl.addEventListener('mouseenter', () => {
-              // Remove any existing popup
-              if (activePopupRef.current) {
-                activePopupRef.current.remove();
-              }
+            const popup = new mapboxgl.Popup({
+              offset: 25,
+              closeOnClick: false,
+              maxWidth: '320px',
+              className: 'custom-popup'
+            });
 
+            const marker = new mapboxgl.Marker(markerEl)
+              .setLngLat([location.longitude, location.latitude])
+              .setPopup(popup)
+              .addTo(map.current!);
+
+            markerEl.addEventListener('mouseenter', () => {
               markerEl.style.transform = 'scale(1.2)';
               const availabilityPercentage = (location.availableSpots / location.capacity) * 100;
               const availabilityColor = availabilityPercentage > 50 ? 'text-green-600' : 
                                       availabilityPercentage > 20 ? 'text-yellow-600' : 
                                       'text-red-600';
               
-              const popup = new mapboxgl.Popup({
-                offset: 25,
-                closeOnClick: true,
-                maxWidth: '320px',
-                className: 'custom-popup'
-              });
-
               const popupContainer = document.createElement('div');
               popupContainer.innerHTML = `
                 <div class="p-4 bg-white rounded-lg shadow-lg">
@@ -153,31 +152,16 @@ const MapboxGlobeView: React.FC<MapboxGlobeViewProps> = ({
                   </div>
                 </div>
               `;
-
               popup.setLngLat([location.longitude, location.latitude])
                 .setDOMContent(popupContainer)
                 .addTo(map.current!);
-
-              // Store the current popup reference
-              activePopupRef.current = popup;
-
-              // Add event listener to close popup when clicking outside
-              const closePopupOnClick = (e: MouseEvent) => {
-                if (!popupContainer.contains(e.target as Node)) {
-                  popup.remove();
-                  document.removeEventListener('click', closePopupOnClick);
-                }
-              };
-              document.addEventListener('click', closePopupOnClick);
             });
 
             markerEl.addEventListener('mouseleave', () => {
               markerEl.style.transform = 'scale(1)';
             });
 
-            const marker = new mapboxgl.Marker(markerEl)
-              .setLngLat([location.longitude, location.latitude])
-              .addTo(map.current!);
+            marker.setPopup(popup);
           });
 
           map.current.addSource('mapbox-dem', {
@@ -202,9 +186,6 @@ const MapboxGlobeView: React.FC<MapboxGlobeViewProps> = ({
           if (map.current) {
             map.current.remove();
             map.current = null;
-          }
-          if (activePopupRef.current) {
-            activePopupRef.current.remove();
           }
         };
       } catch (err) {
