@@ -16,7 +16,7 @@ const transactionHistory = [
   {
     id: "T78901",
     date: new Date("2025-03-25T14:45:00"),
-    amount: "$12.50",
+    amount: "₹150.00",
     paymentMethod: "Credit Card",
     cardLast4: "4242",
     status: "successful",
@@ -26,7 +26,7 @@ const transactionHistory = [
   {
     id: "T78902",
     date: new Date("2025-03-23T12:30:00"),
-    amount: "$5.25",
+    amount: "₹80.00",
     paymentMethod: "Credit Card",
     cardLast4: "4242",
     status: "successful",
@@ -36,7 +36,7 @@ const transactionHistory = [
   {
     id: "T78903",
     date: new Date("2025-03-22T19:45:00"),
-    amount: "$65.00",
+    amount: "₹500.00",
     paymentMethod: "PayPal",
     cardLast4: null,
     status: "successful",
@@ -46,7 +46,7 @@ const transactionHistory = [
   {
     id: "T78904",
     date: new Date("2025-03-18T17:45:00"),
-    amount: "$9.75",
+    amount: "₹120.00",
     paymentMethod: "Apple Pay",
     cardLast4: null,
     status: "successful",
@@ -56,7 +56,7 @@ const transactionHistory = [
   {
     id: "T78905",
     date: new Date("2025-03-15T16:20:00"),
-    amount: "$7.50",
+    amount: "₹100.00",
     paymentMethod: "Credit Card",
     cardLast4: "7890",
     status: "failed",
@@ -66,7 +66,7 @@ const transactionHistory = [
   {
     id: "T78906",
     date: new Date("2025-03-10T11:15:00"),
-    amount: "$3.25",
+    amount: "₹50.00",
     paymentMethod: "Credit Card",
     cardLast4: "4242",
     status: "successful",
@@ -76,7 +76,7 @@ const transactionHistory = [
   {
     id: "T78907",
     date: new Date("2025-03-05T09:30:00"),
-    amount: "$15.75",
+    amount: "₹200.00",
     paymentMethod: "Google Pay",
     cardLast4: null,
     status: "successful",
@@ -120,7 +120,7 @@ export default function TransactionHistoryPage() {
   const totalAmount = filteredTransactions
     .filter((t) => t.status === "successful")
     .reduce((sum, transaction) => {
-      const amount = Number.parseFloat(transaction.amount.replace("$", ""))
+      const amount = Number.parseFloat(transaction.amount.replace("₹", ""))
       return sum + amount
     }, 0)
 
@@ -139,7 +139,7 @@ export default function TransactionHistoryPage() {
               <CreditCard className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">${totalAmount.toFixed(2)}</div>
+              <div className="text-2xl font-bold">₹{totalAmount.toFixed(2)}</div>
               <p className="text-xs text-muted-foreground">From {filteredTransactions.length} transactions</p>
             </CardContent>
           </Card>

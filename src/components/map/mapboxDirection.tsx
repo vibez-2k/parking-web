@@ -20,22 +20,83 @@ const MapboxParkingRouteMap: React.FC = () => {
   const map = useRef<mapboxgl.Map | null>(null);
   const [userLocation, setUserLocation] = useState<mapboxgl.LngLat | null>(null);
   const [error, setError] = useState<string | null>(null);
-
-  // Sample parking locations (hardcoded around a specific location)
-  const parkingLocations: ParkingLocation[] = [
-    {
-      id: 1,
-      name: "Central Parking Garage",
-      latitude: 11.507219, // Changed to consistent location
-      longitude:  77.376230, // Changed to consistent location
-      capacity: 200,
-      availableSpots: 75,
-      address: "123 Main Street"
-    },
-  ];
+  const [parkingLocations, setParkingLocations] = useState<ParkingLocation[]>([]);
+  const [selectedLocation, setSelectedLocation] = useState<ParkingLocation | null>(null);
+  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
-    // Ensure Mapbox access token is set
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  const showRoute = (location: ParkingLocation) => {
+    if (!userLocation || !map.current) return;
+
+    if (map.current.getLayer('route')) {
+      map.current.removeLayer('route');
+      map.current.removeSource('route');
+    }
+
+    const directionsUrl = `https://api.mapbox.com/directions/v5/mapbox/driving/${userLocation.lng},${userLocation.lat};${location.longitude},${location.latitude}?geometries=geojson&overview=full&access_token=${mapboxgl.accessToken}`;
+
+    fetch(directionsUrl)
+      .then(response => response.json())
+      .then(data => {
+        const route = data.routes[0];
+        
+        map.current?.addSource('route', {
+          type: 'geojson',
+          data: {
+            type: 'Feature',
+            properties: {},
+            geometry: {
+              type: 'LineString',
+              coordinates: route.geometry.coordinates
+            }
+          }
+        });
+
+        map.current?.addLayer({
+          id: 'route',
+          type: 'line',
+          source: 'route',
+          layout: {
+            'line-join': 'round',
+            'line-cap': 'round'
+          },
+          paint: {
+            'line-color': '#4285F4',
+            'line-width': isMobile ? 4 : 6,
+            'line-opacity': 0.8
+          }
+        });
+
+        const bounds = new mapboxgl.LngLatBounds(
+          [userLocation.lng, userLocation.lat],
+          [location.longitude, location.latitude]
+        );
+        
+        route.geometry.coordinates.forEach((coord: number[]) => {
+          bounds.extend(coord as [number, number]);
+        });
+
+        map.current?.fitBounds(bounds, {
+          padding: isMobile ? 50 : 100,
+          duration: 1000
+        });
+      })
+      .catch(err => {
+        console.error('Route generation error:', err);
+        alert('Could not generate route');
+      });
+  };
+
+  useEffect(() => {
     mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN || '';
 
     if (!mapboxgl.accessToken) {
@@ -43,181 +104,219 @@ const MapboxParkingRouteMap: React.FC = () => {
       return;
     }
 
-    // Initialize map
-    map.current = new mapboxgl.Map({
-      container: mapContainer.current!,
-      style: 'mapbox://styles/mapbox/streets-v12',
-      center: [-122.4194, 37.7749], // San Francisco center
-      zoom: 12
-    });
-
-    // Get user's location
-    if ('geolocation' in navigator) {
+    if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
-          const { latitude, longitude } = position.coords;
-          const userPos = new mapboxgl.LngLat(longitude, latitude);
+          const userPos = new mapboxgl.LngLat(
+            position.coords.longitude,
+            position.coords.latitude
+          );
           setUserLocation(userPos);
 
-          // Create user location marker
+          map.current = new mapboxgl.Map({
+            container: mapContainer.current!,
+            style: 'mapbox://styles/mapbox/streets-v12',
+            center: [userPos.lng, userPos.lat],
+            zoom: isMobile ? 13 : 14
+          });
+
           const userMarkerEl = document.createElement('div');
           userMarkerEl.innerHTML = `
             <div style="
-              width: 40px; 
-              height: 40px; 
-              background-color: blue; 
+              width: ${isMobile ? '16px' : '20px'}; 
+              height: ${isMobile ? '16px' : '20px'}; 
+              background-color: #4285F4; 
               border-radius: 50%; 
-              border: 3px solid white;
-              box-shadow: 0 0 10px rgba(0,0,255,0.5);
+              border: 2px solid white;
+              box-shadow: 0 0 10px rgba(66,133,244,0.5);
             "></div>
           `;
 
-          // Add user marker
           new mapboxgl.Marker(userMarkerEl)
             .setLngLat(userPos)
-            .addTo(map.current!);
+            .addTo(map.current);
 
-          // Center map on user location
-          map.current?.flyTo({
-            center: userPos,
-            zoom: 12
-          });
+          const dummyLocations: ParkingLocation[] = [
+            {
+              id: 1,
+              name: "Central Parking Garage",
+              latitude: userPos.lat,
+              longitude: userPos.lng + 0.01,
+              capacity: 200,
+              availableSpots: 75,
+              address: "123 Main Street"
+            },
+            {
+              id: 2,
+              name: "North Parking Lot",
+              latitude: userPos.lat + 0.015,
+              longitude: userPos.lng,
+              capacity: 150,
+              availableSpots: 50,
+              address: "456 North Avenue"
+            },
+            {
+              id: 3,
+              name: "West Parking Complex",
+              latitude: userPos.lat,
+              longitude: userPos.lng - 0.02,
+              capacity: 180,
+              availableSpots: 90,
+              address: "789 West Street"
+            },
+            {
+              id: 4,
+              name: "South Parking Zone",
+              latitude: userPos.lat - 0.025,
+              longitude: userPos.lng,
+              capacity: 120,
+              availableSpots: 40,
+              address: "321 South Road"
+            }
+          ];
 
-          // Add parking location markers
-          parkingLocations.forEach(location => {
-            // Create parking marker
+          setParkingLocations(dummyLocations);
+
+          dummyLocations.forEach(location => {
             const parkingMarkerEl = document.createElement('div');
             parkingMarkerEl.innerHTML = `
               <div style="
-                width: 30px; 
-                height: 30px; 
-                background-color: green; 
+                width: ${isMobile ? '24px' : '30px'}; 
+                height: ${isMobile ? '24px' : '30px'}; 
+                background-color: #EA4335; 
                 border-radius: 50%; 
                 display: flex;
                 align-items: center;
                 justify-content: center;
                 color: white;
+                font-size: ${isMobile ? '12px' : '14px'};
                 font-weight: bold;
                 border: 2px solid white;
-                box-shadow: 0 0 8px rgba(0,128,0,0.5);
+                box-shadow: 0 0 8px rgba(234,67,53,0.5);
               ">P</div>
             `;
 
-            // Create popup for parking location
-            const popup = new mapboxgl.Popup({ offset: 25 })
-              .setHTML(`
-                <div>
-                  <h3>${location.name}</h3>
-                  <p>Address: ${location.address}</p>
-                  <p>Capacity: ${location.capacity}</p>
-                  <p>Available: ${location.availableSpots}</p>
-                  <button class="route-btn" data-lng="${location.longitude}" data-lat="${location.latitude}" style="
-                    background-color: blue;
-                    color: white;
-                    border: none;
-                    padding: 5px 10px;
-                    border-radius: 5px;
-                    cursor: pointer;
-                  ">Get Route</button>
-                </div>
-              `);
-
-            // Create marker
-            const marker = new mapboxgl.Marker(parkingMarkerEl)
+            new mapboxgl.Marker(parkingMarkerEl)
               .setLngLat([location.longitude, location.latitude])
-              .setPopup(popup)
               .addTo(map.current!);
-
-            // Event listener for route generation
-            popup.on('open', () => {
-              const routeBtns = document.querySelectorAll('.route-btn');
-              routeBtns.forEach(btn => {
-                btn.addEventListener('click', (e) => {
-                  // Remove any existing route layers
-                  if (map.current?.getLayer('route')) {
-                    map.current.removeLayer('route');
-                    map.current.removeSource('route');
-                  }
-
-                  const targetBtn = e.currentTarget as HTMLButtonElement;
-                  const destLng = parseFloat(targetBtn.dataset.lng || '0');
-                  const destLat = parseFloat(targetBtn.dataset.lat || '0');
-
-                  // Create a new directions service
-                  const directionsUrl = `https://api.mapbox.com/directions/v5/mapbox/driving/${userPos.lng},${userPos.lat};${destLng},${destLat}?access_token=${mapboxgl.accessToken}`;
-
-                  fetch(directionsUrl)
-                    .then(response => response.json())
-                    .then(data => {
-                      // Draw route on map
-                      const route = data.routes[0];
-                      
-                      map.current?.addSource('route', {
-                        type: 'geojson',
-                        data: {
-                          type: 'Feature',
-                          properties: {},
-                          geometry: {
-                            type: 'LineString',
-                            coordinates: route.geometry.coordinates
-                          }
-                        }
-                      });
-
-                      map.current?.addLayer({
-                        id: 'route',
-                        type: 'line',
-                        source: 'route',
-                        layout: {
-                          'line-join': 'round',
-                          'line-cap': 'round'
-                        },
-                        paint: {
-                          'line-color': '#888',
-                          'line-width': 8
-                        }
-                      });
-
-                      // Fit map to route
-                      const bounds = new mapboxgl.LngLatBounds(
-                        userPos,
-                        [destLng, destLat]
-                      );
-                      map.current?.fitBounds(bounds, { padding: 50 });
-                    })
-                    .catch(err => {
-                      console.error('Route generation error:', err);
-                      alert('Could not generate route');
-                    });
-                });
-              });
-            });
           });
         },
-        (error) => {
-          console.error('Geolocation error:', error);
-          setError('Could not retrieve your location');
+        (err) => {
+          setError('Could not get your location. Please enable location services.');
+          console.error(err);
         }
       );
     } else {
-      setError('Geolocation not supported');
+      setError('Geolocation is not supported by your browser');
     }
 
-    // Cleanup
     return () => {
       map.current?.remove();
     };
-  }, []);
+  }, [isMobile]);
 
   if (error) {
-    return <div className="error">{error}</div>;
+    return <div className="error" style={{ 
+      padding: isMobile ? '15px' : '20px', 
+      backgroundColor: '#ffebee', 
+      color: '#c62828',
+      borderRadius: '4px',
+      margin: isMobile ? '10px' : '20px',
+      fontSize: isMobile ? '14px' : '16px'
+    }}>{error}</div>;
   }
 
   return (
-    <div
-      ref={mapContainer}
-      style={{ width: '100%', height: '500px' }}
-    />
+    <div className="map-container" style={{
+      display: 'flex',
+      flexDirection: isMobile ? 'column' : 'row',
+      gap: isMobile ? '10px' : '20px',
+      padding: isMobile ? '10px' : '20px',
+      maxWidth: '100%',
+      height: isMobile ? 'calc(100vh - 60px)' : '100%'
+    }}>
+      <div
+        ref={mapContainer}
+        style={{ 
+          width: '100%',
+          height: isMobile ? '50vh' : '600px',
+          borderRadius: '8px',
+          overflow: 'hidden',
+          boxShadow: '0 2px 6px rgba(0,0,0,0.1)',
+          flex: 2
+        }}
+      />
+      <div style={{
+        flex: 1,
+        height: isMobile ? '45vh' : '600px',
+        overflowY: 'auto',
+        padding: isMobile ? '10px' : '15px',
+        backgroundColor: '#fff',
+        borderRadius: '8px',
+        boxShadow: '0 2px 6px rgba(0,0,0,0.1)'
+      }}>
+        <h2 style={{ 
+          marginBottom: isMobile ? '10px' : '15px', 
+          color: '#333',
+          fontSize: isMobile ? '18px' : '24px'
+        }}>Available Parking Locations</h2>
+        {parkingLocations.map(location => (
+          <div
+            key={location.id}
+            style={{
+              padding: isMobile ? '10px' : '15px',
+              marginBottom: isMobile ? '8px' : '10px',
+              backgroundColor: selectedLocation?.id === location.id ? '#e3f2fd' : '#f5f5f5',
+              borderRadius: '6px',
+              cursor: 'pointer',
+              transition: 'all 0.2s ease'
+            }}
+            onClick={() => {
+              setSelectedLocation(location);
+              showRoute(location);
+            }}
+          >
+            <h3 style={{ 
+              margin: '0 0 6px 0', 
+              color: '#333',
+              fontSize: isMobile ? '16px' : '18px'
+            }}>{location.name}</h3>
+            <p style={{ 
+              margin: '4px 0', 
+              color: '#666',
+              fontSize: isMobile ? '13px' : '14px'
+            }}>{location.address}</p>
+            <p style={{ 
+              margin: '4px 0', 
+              color: '#666',
+              fontSize: isMobile ? '13px' : '14px'
+            }}>
+              Available: {location.availableSpots}/{location.capacity}
+            </p>
+            <button
+              style={{
+                backgroundColor: '#4285F4',
+                color: 'white',
+                border: 'none',
+                padding: isMobile ? '6px 12px' : '8px 16px',
+                borderRadius: '4px',
+                cursor: 'pointer',
+                marginTop: '6px',
+                fontWeight: 'bold',
+                width: '100%',
+                fontSize: isMobile ? '14px' : '16px'
+              }}
+              onClick={(e) => {
+                e.stopPropagation();
+                showRoute(location);
+              }}
+            >
+              Show Route
+            </button>
+          </div>
+        ))}
+      </div>
+    </div>
   );
 };
 

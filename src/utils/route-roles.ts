@@ -14,6 +14,7 @@ export const navlinks = {
       url: "#",
       items: [
         { title: "video live feeds", url: "/dashboard/Livevideos" },
+        { title: "Live Count", url: "/dashboard/live-count" },
       ],
     },
     {
@@ -72,6 +73,7 @@ export const navlinks = {
       url: "#",
       items: [
         { title: "video live feeds", url: "/dashboard/live-feed" },
+        { title: "Live Count", url: "/dashboard/live-count" },
       ],
     },
     {
@@ -101,7 +103,8 @@ Object.entries(navlinks).forEach(([role, sections]) => {
 
 // Add additional protected routes that don't appear in the navigation
 export const additionalProtectedRoutes: Record<string, string[]> = {
-  "/dashboard/live-feed": ["Super Admin", "Venue Owner"]
+  "/dashboard/live-feed": ["Super Admin", "Venue Owner"],
+  "/dashboard/live-count": ["Super Admin", "Venue Owner"],
 };
 
 // Merge the additional routes into the main protectedRoutes

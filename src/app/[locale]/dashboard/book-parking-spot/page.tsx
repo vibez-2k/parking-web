@@ -28,19 +28,25 @@ const venues = [
         slots: 35,
         capacity:600
     },
-
 ]
-
-
 
 export default function Home() {
     return (
-        <main >
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <main className="px-4 sm:px-6 lg:px-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
                 {venues.map((venue, index) => (
-                    <PremiumProductCard key={index} name={venue.name} venue={venue} email={venue.address} type={"User"} basePrice={4999} image={venue.image} />))}
+                    <div className="w-full flex justify-center " key={index}>
+                        <PremiumProductCard 
+                            name={venue.name} 
+                            venue={venue} 
+                            email={venue.address} 
+                            type={"User"} 
+                            basePrice={4999} 
+                            image={venue.image}
+                        />
+                    </div>
+                ))}
             </div>
         </main>
     )
 }
-

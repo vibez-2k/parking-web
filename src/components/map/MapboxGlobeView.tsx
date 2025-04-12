@@ -29,6 +29,7 @@ const MapboxGlobeView: React.FC<MapboxGlobeViewProps> = ({
   const map = useRef<mapboxgl.Map | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [parkingLocations, setParkingLocations] = useState<ParkingLocation[]>([]);
+  const activePopupRef = useRef<mapboxgl.Popup | null>(null);
 
   const generateClusteredParkingLocations = (
     centerLongitude: number,
@@ -82,7 +83,10 @@ const MapboxGlobeView: React.FC<MapboxGlobeViewProps> = ({
           );
           setParkingLocations(locations);
 
-          const userMarker = new mapboxgl.Marker({ color: 'red' })
+          const userMarker = new mapboxgl.Marker({
+            color: '#FF4B4B',
+            scale: 1.2
+          })
             .setLngLat([initialLongitude, initialLatitude])
             .addTo(map.current!);
 
@@ -95,46 +99,85 @@ const MapboxGlobeView: React.FC<MapboxGlobeViewProps> = ({
           locations.forEach(location => {
             const markerEl = document.createElement('div');
             markerEl.className = 'custom-marker';
-            markerEl.style.width = '15px';
-            markerEl.style.height = '15px';
-            markerEl.style.backgroundColor = 'blue';
+            markerEl.style.width = '24px';
+            markerEl.style.height = '24px';
+            markerEl.style.background = `radial-gradient(circle at center, #4A90E2 60%, rgba(74, 144, 226, 0.4) 100%)`;
             markerEl.style.borderRadius = '50%';
             markerEl.style.cursor = 'pointer';
-
-            const popup = new mapboxgl.Popup({
-              offset: 25,
-              closeOnClick: false,
-              maxWidth: '300px'
-            });
-
-            const marker = new mapboxgl.Marker(markerEl)
-              .setLngLat([location.longitude, location.latitude])
-              .setPopup(popup)
-              .addTo(map.current!);
+            markerEl.style.boxShadow = '0 0 10px rgba(74, 144, 226, 0.5)';
+            markerEl.style.border = '2px solid #FFFFFF';
+            markerEl.style.transition = 'all 0.3s ease';
 
             markerEl.addEventListener('mouseenter', () => {
+              // Remove any existing popup
+              if (activePopupRef.current) {
+                activePopupRef.current.remove();
+              }
+
+              markerEl.style.transform = 'scale(1.2)';
+              const availabilityPercentage = (location.availableSpots / location.capacity) * 100;
+              const availabilityColor = availabilityPercentage > 50 ? 'text-green-600' : 
+                                      availabilityPercentage > 20 ? 'text-yellow-600' : 
+                                      'text-red-600';
+              
+              const popup = new mapboxgl.Popup({
+                offset: 25,
+                closeOnClick: true,
+                maxWidth: '320px',
+                className: 'custom-popup'
+              });
+
               const popupContainer = document.createElement('div');
               popupContainer.innerHTML = `
-                <div class="p-2">
-                  <h3 class="font-bold text-lg">${location.name}</h3>
-                  <p>Total Capacity: ${location.capacity}</p>
-                  <p>Available Spots: ${location.availableSpots}</p>
-                  <div class="flex space-x-2 mt-2">
-                    <a href="${location.liveFeedUrl}" class="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600">
-                      View Live Feed
+                <div class="p-4 bg-white rounded-lg shadow-lg">
+                  <h3 class="font-bold text-xl text-gray-800 mb-2">${location.name}</h3>
+                  <div class="space-y-2 mb-3">
+                    <div class="flex justify-between items-center">
+                      <span class="text-gray-600">Total Capacity:</span>
+                      <span class="font-semibold">${location.capacity}</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                      <span class="text-gray-600">Available Spots:</span>
+                      <span class="font-semibold ${availabilityColor}">${location.availableSpots}</span>
+                    </div>
+                  </div>
+                  <div class="flex space-x-3 mt-3">
+                    <a href="${location.liveFeedUrl}" 
+                       class="flex-1 px-4 py-2 bg-blue-500 text-white rounded-lg text-center font-medium hover:bg-blue-600 transition-colors duration-200">
+                      Live Feed
                     </a>
-                    <a href="/parking/${location.id}" class="px-3 py-1 bg-green-500 text-white rounded hover:bg-green-600">
+                    <a href="/dashboard/venue-details" 
+                       class="flex-1 px-4 py-2 bg-green-500 text-white rounded-lg text-center font-medium hover:bg-green-600 transition-colors duration-200">
                       Details
                     </a>
                   </div>
                 </div>
               `;
+
               popup.setLngLat([location.longitude, location.latitude])
                 .setDOMContent(popupContainer)
                 .addTo(map.current!);
+
+              // Store the current popup reference
+              activePopupRef.current = popup;
+
+              // Add event listener to close popup when clicking outside
+              const closePopupOnClick = (e: MouseEvent) => {
+                if (!popupContainer.contains(e.target as Node)) {
+                  popup.remove();
+                  document.removeEventListener('click', closePopupOnClick);
+                }
+              };
+              document.addEventListener('click', closePopupOnClick);
             });
 
-            marker.setPopup(popup);
+            markerEl.addEventListener('mouseleave', () => {
+              markerEl.style.transform = 'scale(1)';
+            });
+
+            const marker = new mapboxgl.Marker(markerEl)
+              .setLngLat([location.longitude, location.latitude])
+              .addTo(map.current!);
           });
 
           map.current.addSource('mapbox-dem', {
@@ -159,6 +202,9 @@ const MapboxGlobeView: React.FC<MapboxGlobeViewProps> = ({
           if (map.current) {
             map.current.remove();
             map.current = null;
+          }
+          if (activePopupRef.current) {
+            activePopupRef.current.remove();
           }
         };
       } catch (err) {

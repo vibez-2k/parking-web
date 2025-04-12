@@ -244,7 +244,7 @@ export default function PremiumProductCard({ name, basePrice, venue, email, imag
     return (
         <>
             <motion.div
-                className="relative w-64 text-black rounded-xl overflow-hidden cursor-pointer shadow-md hover:shadow-lg transition-shadow duration-300"
+                className="relative w-full text-black rounded-xl overflow-hidden cursor-pointer shadow-md hover:shadow-lg transition-shadow duration-300"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5 }}
@@ -300,17 +300,14 @@ export default function PremiumProductCard({ name, basePrice, venue, email, imag
 
             {/* Popup Modal */}
             {isPopupOpen && (
-                <div className="fixed z-10 top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50">
-
-
-
+                <div className="fixed z-10 top-0 left-0 w-full h-screen flex items-start justify-center bg-black bg-opacity-50 p-4 overflow-y-auto">
                     <WizardForm
                         title="Parking Reservation"
                         description="Book your parking spot in just a few steps."
                         schema={formSchema}
                         defaultValues={defaultValues}
                         onSubmit={onSubmit}
-                        className="max-w-2xl mx-auto relative text-black"
+                        className="w-full max-w-2xl mx-auto relative text-black bg-white rounded-lg shadow-xl p-4 sm:p-6 mt-4 mb-4 max-h-[90vh] overflow-y-auto"
                         form={form}
                         stepFields={stepFields}
                         persistenceKey="parking-booking-wizard"
@@ -328,16 +325,17 @@ export default function PremiumProductCard({ name, basePrice, venue, email, imag
                         }}
                     >
                         <button
-                            className="absolute top-5 right-5 text-red-500"
+                            className="absolute top-2 right-2 sm:top-5 sm:right-5 text-red-500 p-2"
                             onClick={() => setIsPopupOpen(false)}
                         >
-                            <X/>
+                            <X className="h-6 w-6"/>
                         </button>
+
                         {/* Step 1: Contact Information */}
                         <WizardStep step={0} validator={() => validateStep(stepFields[0])} fieldNames={stepFields[0]}>
-                            <div className="space-y-6">
-                                <h2 className="text-xl font-semibold">Contact Information</h2>
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div className="space-y-4">
+                                <h2 className="text-lg font-semibold">Contact Information</h2>
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                                     <FormField
                                         control={form.control}
                                         name="contactInfo.firstName"
@@ -345,7 +343,7 @@ export default function PremiumProductCard({ name, basePrice, venue, email, imag
                                             <FormItem>
                                                 <FormLabel>First Name</FormLabel>
                                                 <FormControl>
-                                                    <Input placeholder="John" {...field} />
+                                                    <Input placeholder="John" {...field} className="w-full" />
                                                 </FormControl>
                                                 <FormMessage />
                                             </FormItem>
@@ -358,7 +356,7 @@ export default function PremiumProductCard({ name, basePrice, venue, email, imag
                                             <FormItem>
                                                 <FormLabel>Last Name</FormLabel>
                                                 <FormControl>
-                                                    <Input placeholder="Doe" {...field} />
+                                                    <Input placeholder="Doe" {...field} className="w-full" />
                                                 </FormControl>
                                                 <FormMessage />
                                             </FormItem>
@@ -372,7 +370,7 @@ export default function PremiumProductCard({ name, basePrice, venue, email, imag
                                         <FormItem>
                                             <FormLabel>Email</FormLabel>
                                             <FormControl>
-                                                <Input type="email" placeholder="john.doe@example.com" {...field} />
+                                                <Input type="email" placeholder="john.doe@example.com" {...field} className="w-full" />
                                             </FormControl>
                                             <FormMessage />
                                         </FormItem>
@@ -385,7 +383,7 @@ export default function PremiumProductCard({ name, basePrice, venue, email, imag
                                         <FormItem>
                                             <FormLabel>Phone Number</FormLabel>
                                             <FormControl>
-                                                <Input type="tel" placeholder="(123) 456-7890" {...field} />
+                                                <Input type="tel" placeholder="(123) 456-7890" {...field} className="w-full" />
                                             </FormControl>
                                             <FormMessage />
                                         </FormItem>
@@ -396,8 +394,8 @@ export default function PremiumProductCard({ name, basePrice, venue, email, imag
 
                         {/* Step 2: Vehicle Information */}
                         <WizardStep step={1} validator={() => validateStep(stepFields[1])} fieldNames={stepFields[1]}>
-                            <div className="space-y-6">
-                                <h2 className="text-xl font-semibold">Vehicle Information</h2>
+                            <div className="space-y-4">
+                                <h2 className="text-lg font-semibold">Vehicle Information</h2>
                                 <FormField
                                     control={form.control}
                                     name="vehicleInfo.licensePlate"
@@ -405,7 +403,7 @@ export default function PremiumProductCard({ name, basePrice, venue, email, imag
                                         <FormItem>
                                             <FormLabel>License Plate</FormLabel>
                                             <FormControl>
-                                                <Input placeholder="ABC123" {...field} />
+                                                <Input placeholder="ABC123" {...field} className="w-full" />
                                             </FormControl>
                                             <FormMessage />
                                         </FormItem>
@@ -419,7 +417,7 @@ export default function PremiumProductCard({ name, basePrice, venue, email, imag
                                             <FormLabel>Vehicle Type</FormLabel>
                                             <Select onValueChange={field.onChange} defaultValue={field.value}>
                                                 <FormControl>
-                                                    <SelectTrigger>
+                                                    <SelectTrigger className="w-full">
                                                         <SelectValue placeholder="Select vehicle type" />
                                                     </SelectTrigger>
                                                 </FormControl>
@@ -439,8 +437,8 @@ export default function PremiumProductCard({ name, basePrice, venue, email, imag
 
                         {/* Step 3: Booking Details */}
                         <WizardStep step={2} validator={() => validateStep(stepFields[2])} fieldNames={stepFields[2]}>
-                            <div className="space-y-6">
-                                <h2 className="text-xl font-semibold">Booking Details</h2>
+                            <div className="space-y-4">
+                                <h2 className="text-lg font-semibold">Booking Details</h2>
                                 <FormField
                                     control={form.control}
                                     name="bookingDetails.date"
@@ -468,6 +466,7 @@ export default function PremiumProductCard({ name, basePrice, venue, email, imag
                                                             date < new Date() || date > new Date(new Date().setMonth(new Date().getMonth() + 3))
                                                         }
                                                         initialFocus
+                                                        className="rounded-md border"
                                                     />
                                                 </PopoverContent>
                                             </Popover>
@@ -483,7 +482,7 @@ export default function PremiumProductCard({ name, basePrice, venue, email, imag
                                             <FormLabel>Start Time</FormLabel>
                                             <Select onValueChange={field.onChange} defaultValue={field.value}>
                                                 <FormControl>
-                                                    <SelectTrigger>
+                                                    <SelectTrigger className="w-full">
                                                         <SelectValue placeholder="Select start time" />
                                                     </SelectTrigger>
                                                 </FormControl>
@@ -510,7 +509,7 @@ export default function PremiumProductCard({ name, basePrice, venue, email, imag
                                                 defaultValue={field.value.toString()}
                                             >
                                                 <FormControl>
-                                                    <SelectTrigger>
+                                                    <SelectTrigger className="w-full">
                                                         <SelectValue placeholder="Select duration" />
                                                     </SelectTrigger>
                                                 </FormControl>
@@ -532,8 +531,8 @@ export default function PremiumProductCard({ name, basePrice, venue, email, imag
 
                         {/* Step 4: Slot Selection */}
                         <WizardStep step={3} validator={() => validateStep(stepFields[3])} fieldNames={stepFields[3]}>
-                            <div className="space-y-6">
-                                <h2 className="text-xl font-semibold">Select Parking Slot</h2>
+                            <div className="space-y-4">
+                                <h2 className="text-lg font-semibold">Select Parking Slot</h2>
                                 <FormField
                                     control={form.control}
                                     name="slotSelection.slotId"
@@ -541,12 +540,14 @@ export default function PremiumProductCard({ name, basePrice, venue, email, imag
                                         <FormItem>
                                             <FormLabel>Available Slots</FormLabel>
                                             <FormControl>
-                                                <ParkingSlots
-                                                    selectedSlot={field.value}
-                                                    onSelectSlot={field.onChange}
-                                                    date={selectedDate}
-                                                    startTime={selectedTime}
-                                                />
+                                                <div className="w-full overflow-x-auto">
+                                                    <ParkingSlots
+                                                        selectedSlot={field.value}
+                                                        onSelectSlot={field.onChange}
+                                                        date={selectedDate}
+                                                        startTime={selectedTime}
+                                                    />
+                                                </div>
                                             </FormControl>
                                             <FormDescription>Select an available parking slot for your reservation</FormDescription>
                                             <FormMessage />
@@ -555,13 +556,14 @@ export default function PremiumProductCard({ name, basePrice, venue, email, imag
                                 />
                             </div>
                         </WizardStep>
+
                         {/* Step 5: Payment Details */}
                         <WizardStep step={4} validator={() => validateStep(stepFields[4])} fieldNames={stepFields[4]}>
-                            <div className="space-y-2 h-[60vh] max-h-[60vh]">
-                                <h2 className="text-lg font-semibold">Payment Details</h2>
-                                <div className="bg-muted/30 p-1 rounded-md mb-1">
-                                    <h3 className="font-medium text-xs mb-1">Booking Summary</h3>
-                                    <div className="grid grid-cols-2 gap-1 text-xs">
+                            <div className="space-y-4 max-h-[60vh] overflow-y-auto px-2">
+                                <h2 className="text-lg font-semibold sticky top-0 bg-white py-2">Payment Details</h2>
+                                <div className="bg-muted/30 p-3 rounded-md mb-4">
+                                    <h3 className="font-medium text-sm mb-2">Booking Summary</h3>
+                                    <div className="grid grid-cols-2 gap-2 text-sm">
                                         <span className="text-muted-foreground">Date:</span>
                                         <span>{selectedDate ? format(selectedDate, "MMM d, yyyy") : ""}</span>
 
@@ -592,7 +594,7 @@ export default function PremiumProductCard({ name, basePrice, venue, email, imag
                                                 <Checkbox checked={field.value} onCheckedChange={field.onChange} />
                                             </FormControl>
                                             <div className="space-y-0.5 leading-none">
-                                                <FormLabel>Save payment information for future bookings</FormLabel>
+                                                <FormLabel className="text-sm">Save payment information for future bookings</FormLabel>
                                             </div>
                                         </FormItem>
                                     )}
@@ -602,8 +604,8 @@ export default function PremiumProductCard({ name, basePrice, venue, email, imag
 
                         {/* Step 6: Terms and Conditions */}
                         <WizardStep step={5} validator={() => validateStep(stepFields[5])} fieldNames={stepFields[5]}>
-                            <div className="space-y-6">
-                                <h2 className="text-xl font-semibold">Terms and Conditions</h2>
+                            <div className="space-y-4">
+                                <h2 className="text-lg font-semibold">Terms and Conditions</h2>
                                 <div className="bg-muted/30 p-4 rounded-md h-48 overflow-y-auto text-sm">
                                     <h3 className="font-medium mb-2">Parking Terms of Service</h3>
                                     <p className="mb-2">By using our parking services, you agree to the following terms and conditions:</p>
@@ -626,7 +628,7 @@ export default function PremiumProductCard({ name, basePrice, venue, email, imag
                                                 <Checkbox checked={field.value} onCheckedChange={field.onChange} />
                                             </FormControl>
                                             <div className="space-y-1 leading-none">
-                                                <FormLabel>I accept the terms and conditions</FormLabel>
+                                                <FormLabel className="text-sm">I accept the terms and conditions</FormLabel>
                                             </div>
                                             <FormMessage />
                                         </FormItem>

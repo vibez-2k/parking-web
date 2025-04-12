@@ -22,7 +22,7 @@ export default function Home() {
             <div className="relative">
               <div className="w-24 h-24 rounded-full overflow-hidden border-4 border-white">
                 <Image
-                  src="https://i.pravatar.cc/200?img=7"
+                  src="https://randomuser.me/api/portraits/men/65.jpg"
                   alt="SSKIN COPENHAGEN"
                   width={96}
                   height={96}

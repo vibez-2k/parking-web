@@ -27,9 +27,9 @@ const users = [
         image: "https://i.pravatar.cc/200?img=5",
     },
     {
-        name: "Ava Robinson",
+        name: "Ajay c k",
         email: "ava.robinson@example.com",
-        image: "https://i.pravatar.cc/200?img=7",
+        image: "https://randomuser.me/api/portraits/men/65.jpg",
     },
 ]
 
