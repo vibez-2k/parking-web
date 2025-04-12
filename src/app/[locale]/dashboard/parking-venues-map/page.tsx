@@ -9,7 +9,7 @@ function ParkingMapPage() {
     longitude: 78.127725
   });
   const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState(null);
   const locationFetched = useRef(false);
 
   useEffect(() => {
@@ -17,17 +17,17 @@ function ParkingMapPage() {
       locationFetched.current = true;
 
       // Check if running in React Native WebView
-      if (window.ReactNativeWebView) {
-        // Request location from React Native
-        window.ReactNativeWebView.postMessage(JSON.stringify({
-          type: 'GET_LOCATION'
-        }));
-
-        // Listen for location data from React Native
+      if (window.isReactNativeWebView) {
+        console.log("Running in React Native WebView, requesting location");
+        
+        // Setup listener for location data from React Native
         window.addEventListener('message', (event) => {
           try {
             const data = JSON.parse(event.data);
+            console.log("Received message:", data);
+            
             if (data.type === 'LOCATION_DATA') {
+              console.log("Got location data:", data.latitude, data.longitude);
               setUserLocation({
                 latitude: data.latitude,
                 longitude: data.longitude
@@ -39,13 +39,30 @@ function ParkingMapPage() {
             }
           } catch (err) {
             console.error('Error parsing location data:', err);
+            setError("Error processing location data");
+            setIsLoading(false);
           }
         });
+
+        // Request location from React Native
+        window.ReactNativeWebView && window.ReactNativeWebView.postMessage(JSON.stringify({
+          type: 'GET_LOCATION'
+        }));
+        
+        // Set a fallback timeout in case we don't get location data
+        setTimeout(() => {
+          if (isLoading) {
+            console.log("Location timeout, using default");
+            setIsLoading(false);
+          }
+        }, 5000);
       } 
       // If running in web browser
       else if (navigator.geolocation) {
+        console.log("Running in browser, using geolocation API");
         navigator.geolocation.getCurrentPosition(
           (position) => {
+            console.log("Browser location:", position.coords.latitude, position.coords.longitude);
             setUserLocation({
               latitude: position.coords.latitude,
               longitude: position.coords.longitude
@@ -68,13 +85,22 @@ function ParkingMapPage() {
         setIsLoading(false);
       }
     }
-  }, []);
+  }, [isLoading]);
+
+  // Log when map props change
+  useEffect(() => {
+    console.log("Map props updated:", {
+      latitude: userLocation.latitude,
+      longitude: userLocation.longitude,
+      isLoading
+    });
+  }, [userLocation, isLoading]);
 
   const mapProps = {
     initialLongitude: userLocation.longitude,
     initialLatitude: userLocation.latitude,
     zoom: isLoading ? 4 : 12,
-    key: `${userLocation.latitude}-${userLocation.longitude}`
+    key: `${userLocation.latitude}-${userLocation.longitude}-${!isLoading}`
   };
 
   return (
