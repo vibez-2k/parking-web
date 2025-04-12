@@ -3,8 +3,8 @@ import React, { useState, useEffect, useRef } from 'react';
 
 function App() {
   const [counts, setCounts] = useState({
-    two_wheeler_count: 0,
-    four_wheeler_count: 0
+    two_wheeler_count: 23,
+    four_wheeler_count: 40
   });
   const [editCounts, setEditCounts] = useState({
     two_wheeler_count: 0,
