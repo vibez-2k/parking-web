@@ -27,6 +27,18 @@ const MapboxParkingRouteMap: React.FC<{
   );
   const [parkingLocations, setParkingLocations] = useState<ParkingLocation[]>([]);
   const [error, setError] = useState<string | null>(null);
+  const [isListVisible, setIsListVisible] = useState(true);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   const showRoute = (location: ParkingLocation) => {
     if (!userLocation || !map.current) return;
@@ -83,6 +95,10 @@ const MapboxParkingRouteMap: React.FC<{
           padding: 100,
           duration: 1000,
         });
+
+        if (isMobile) {
+          setIsListVisible(false);
+        }
       })
       .catch((err) => {
         console.error("Route generation error:", err);
@@ -210,15 +226,83 @@ const MapboxParkingRouteMap: React.FC<{
   }
 
   return (
-    <div
-      ref={mapContainer}
-      style={{
-        width: "100%",
-        height: "100%",
-        borderRadius: "8px",
-        overflow: "hidden",
-      }}
-    />
+    <div style={{ position: "relative", width: "100%", height: "100%" }}>
+      {/* Map Container */}
+      <div
+        ref={mapContainer}
+        style={{
+          width: "100%",
+          height: "100%",
+          borderRadius: "8px",
+          overflow: "hidden",
+        }}
+      />
+
+      {/* Toggle Button for Mobile */}
+      {isMobile && (
+        <button
+          onClick={() => setIsListVisible(!isListVisible)}
+          style={{
+            position: "absolute",
+            bottom: 20,
+            right: 20,
+            padding: "8px 12px",
+            backgroundColor: "white",
+            border: "1px solid #ddd",
+            borderRadius: "4px",
+            zIndex: 10,
+            cursor: "pointer",
+          }}
+        >
+          {isListVisible ? "Hide List" : "Show List"}
+        </button>
+      )}
+
+      {/* Floating List of Parking Locations */}
+      {isListVisible && (
+        <div
+          style={{
+            position: "absolute",
+            top: isMobile ? 70 : 20,
+            left: isMobile ? "50%" : 20,
+            transform: isMobile ? "translateX(-50%)" : "none",
+            backgroundColor: "white",
+            borderRadius: "8px",
+            padding: "12px",
+            boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
+            maxHeight: isMobile ? "60vh" : "300px",
+            width: isMobile ? "90%" : "300px",
+            overflowY: "auto",
+            zIndex: 10,
+          }}
+        >
+          <h3 style={{ marginBottom: "8px", fontSize: "16px", fontWeight: 600 }}>
+            Parking Spots
+          </h3>
+          {parkingLocations.map((loc) => (
+            <button
+              key={loc.id}
+              onClick={() => showRoute(loc)}
+              style={{
+                display: "block",
+                width: "100%",
+                marginBottom: "6px",
+                padding: "8px 10px",
+                textAlign: "left",
+                border: "1px solid #ddd",
+                borderRadius: "6px",
+                backgroundColor: "#f9f9f9",
+                cursor: "pointer",
+                fontSize: "14px",
+              }}
+            >
+              {loc.name}
+              <div style={{ fontSize: "12px", color: "#666" }}>{loc.address}</div>
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
   );
 };
 
